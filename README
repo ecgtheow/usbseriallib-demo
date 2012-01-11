@@ -1,0 +1,18 @@
+USB Serial Lib Demo
+===================
+
+This is a simple demonstration of the USB Serial Lib available at
+https://github.com/ecgtheow/usbseriallib
+
+It shows:
+
+*    How to initialise all known USB serial devices when the activity is
+     created (see UsbSerial.java:onCreate())
+
+*    How to listen to a USB device attach intent, and report the attach to the
+     main activity (see UsbAttached.java)
+
+*    How to receive data from the USB device (see UsbSerial.java:onReadData())
+
+The device attach intent is defined in AndroidManifest.xml.
+
