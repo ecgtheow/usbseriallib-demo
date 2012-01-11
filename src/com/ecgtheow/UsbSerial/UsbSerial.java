@@ -26,22 +26,40 @@ public class UsbSerial extends Activity implements UsbDeviceConnectionEvent, Usb
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        UsbSerialApplication.setMainActivityStarted();
+        
+        setContentView(R.layout.main);
+    }
+    
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	
+    	Log.d(TAG, "Unregistering USB receiver");
+    	
+    	usb.unregisterReceiver(this);
+    	unregisterReceiver(usb_receiver);
+    }
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	
+    	Log.d(TAG, "Registering USB receiver");
+    	
 		IntentFilter permission_filter = new IntentFilter();
 		permission_filter.addAction(UsbSerialApplication.ACTION_USB_DEVICE_ATTACHED);
 		registerReceiver(usb_receiver, permission_filter);
 		
         try {
-        	Log.w(TAG, "Starting USB!");
+        	Log.d(TAG, "Starting USB!");
         	usb = new UsbSerialLib(this, this, this);
+        	usb.registerReceiver(this);
         	usb.connectDevices();
         } catch (Exception e) {
-        	Log.e(TAG, "Exception thrown", e);
+        	Log.d(TAG, "Exception thrown", e);
         	Toast.makeText(this, e.getClass().getName() + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-
-        UsbSerialApplication.setMainActivityStarted();
-        
-        setContentView(R.layout.main);
     }
     
 	private final BroadcastReceiver usb_receiver = new BroadcastReceiver() {
